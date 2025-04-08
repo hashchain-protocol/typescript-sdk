@@ -86,17 +86,29 @@ const createChannel = async () => {
     // Generate hashchain
     const hashchainArray = hashchain("initial-seed", numberOfTokens);
     const trustAnchor = hashchainArray[hashchainArray.length - 1];
-
-    const tx = await hashchainSDK.createChannel(
-      merchant,
-      token,
-      trustAnchor,
-      amount,
-      numberOfTokens,
-      merchantWithdrawAfterBlocks,
-      payerWithdrawAfterBlocks,
-      { value: amount }
-    );
+    let tx;
+    if (token === ethers.constants.AddressZero) {
+      tx = await hashchainSDK.createChannel(
+        merchant,
+        token,
+        trustAnchor,
+        amount,
+        numberOfTokens,
+        merchantWithdrawAfterBlocks,
+        payerWithdrawAfterBlocks,
+        { value: amount }
+      );
+    } else {
+      tx = await hashchainSDK.createChannel(
+        merchant,
+        token,
+        trustAnchor,
+        amount,
+        numberOfTokens,
+        merchantWithdrawAfterBlocks,
+        payerWithdrawAfterBlocks
+      );
+    }
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
     const receipt = await tx.wait();
