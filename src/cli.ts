@@ -1,3 +1,5 @@
+#!/usr/bin/env ts-node
+
 import readline from "readline";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
@@ -6,9 +8,17 @@ import { hashchain } from "./utils";
 
 dotenv.config();
 
-const CITREA_RPC_URL = process.env.CITREA_RPC_URL!;
-const PRIVATE_KEY = process.env.PRIVATE_KEY!;
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!;
+function getEnvVar(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`❌ Missing environment variable: ${name}`);
+  }
+  return value;
+}
+
+const CITREA_RPC_URL = getEnvVar("CITREA_RPC_URL");
+const PRIVATE_KEY = getEnvVar("PRIVATE_KEY");
+const CONTRACT_ADDRESS = getEnvVar("CONTRACT_ADDRESS");
 
 const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC_URL);
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
