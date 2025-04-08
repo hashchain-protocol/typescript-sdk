@@ -1,3 +1,5 @@
+#!/usr/bin/env ts-node
+
 import readline from "readline";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
@@ -6,9 +8,17 @@ import { hashchain } from "./utils";
 
 dotenv.config();
 
-const CITREA_RPC_URL = process.env.CITREA_RPC_URL!;
-const PRIVATE_KEY = process.env.PRIVATE_KEY!;
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!;
+function getEnvVar(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`❌ Missing environment variable: ${name}`);
+  }
+  return value;
+}
+
+const CITREA_RPC_URL = getEnvVar("CITREA_RPC_URL");
+const PRIVATE_KEY = getEnvVar("PRIVATE_KEY");
+const CONTRACT_ADDRESS = getEnvVar("CONTRACT_ADDRESS");
 
 const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC_URL);
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
@@ -23,12 +33,36 @@ const askQuestion = (query: string): Promise<string> => {
   return new Promise((resolve) => rl.question(query, resolve));
 };
 
+function validateAddress(name: string, value: string) {
+  if (!ethers.utils.isAddress(value)) {
+    throw new Error(`❌ ${name} is not a valid address.`);
+  }
+
+  if (value === ethers.constants.AddressZero) {
+    throw new Error(`❌ ${name} cannot be the zero address.`);
+  }
+}
+
+function validateTokenAddress(name: string, value: string) {
+  if (value === ethers.constants.AddressZero) {
+    // Zero address is allowed for native token
+    return;
+  }
+
+  if (!ethers.utils.isAddress(value)) {
+    throw new Error(`❌ ${name} is not a valid Ethereum address.`);
+  }
+}
+
 const createChannel = async () => {
   try {
     console.log("\n🚀 Creating a payment channel...");
 
     // const payer = await askQuestion("Enter payer address: ");
     const merchant = await askQuestion("Enter merchant address: ");
+    validateAddress("Merchant", merchant);
+    const token = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", token);
     const amountInput = await askQuestion("Enter amount in ETH: ");
     const numberOfTokensInput = await askQuestion("Enter number of tokens: ");
     const merchantWithdrawAfterBlocksInput = await askQuestion(
@@ -55,6 +89,7 @@ const createChannel = async () => {
 
     const tx = await hashchainSDK.createChannel(
       merchant,
+      token,
       trustAnchor,
       amount,
       numberOfTokens,
@@ -78,8 +113,9 @@ const redeemChannel = async () => {
     console.log("\n Redeeming payment channel...");
 
     const payer = await askQuestion("Enter payer address: ");
-    //   const merchant = await askQuestion("Enter merchant address: ");
-    //   const amountInput = await askQuestion("Enter amount in ETH: ");
+    validateAddress("Payer", payer);
+    const token = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", token);
     const finalHashValue = await askQuestion(
       "Enter final hash value received: "
     );
@@ -89,6 +125,7 @@ const redeemChannel = async () => {
 
     const tx = await hashchainSDK.redeemChannel(
       payer,
+      token,
       finalHashValue,
       numberOfTokensInput
     );
@@ -108,7 +145,10 @@ const reclaimChannel = async () => {
     console.log("Reclaiming payment channel...");
 
     const merchant = await askQuestion("Enter merchant address: ");
-    const tx = await hashchainSDK.reclaimChannel(merchant);
+    validateAddress("Merchant", merchant);
+    const token = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", token);
+    const tx = await hashchainSDK.reclaimChannel(merchant, token);
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
     const receipt = await tx.wait();
