@@ -9,7 +9,7 @@ import {
 
 export class HashchainProtocol {
   private contract: ethers.Contract;
-  private signer: ethers.Signer;
+  private signer!: ethers.Signer;
 
   constructor(
     provider: ethers.providers.Provider,
