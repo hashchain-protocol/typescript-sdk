@@ -9,6 +9,9 @@
     "build": "tsc",
     "cli": "ts-node src/cli.ts"
   },
+  "bin": {
+  "hashchain-cli": "./dist/cli.js"
+  },
   "author": "Aashish Paliwal",
   "license": "ISC",
   "devDependencies": {
