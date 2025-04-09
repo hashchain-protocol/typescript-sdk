@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import { Interface } from "ethers/lib/utils";
+import { Interface, Fragment } from "ethers/lib/utils";
+import { JsonFragment } from "@ethersproject/abi";
 
 /**
  * Convert ETH to Wei
@@ -45,9 +46,13 @@ export const hashchain = (value?: string, times: number = 1): string[] => {
  * @param {object} abi - The ABI of the contract.
  * @returns {object} - Decoded error information.
  */
-export function decodeContractError(error, abi) {
+export function decodeContractError(error: unknown, abi: JsonFragment[]) {
   try {
-    let errorData = error?.error?.error?.error?.data;
+    // let errorData = error?.error?.error?.error?.data;
+    let errorData =
+      (error as any)?.error?.error?.error?.data ??
+      (error as any)?.error?.data ??
+      (error as any)?.data;
     if (!errorData || errorData.length < 10) {
       throw new Error("Invalid error data");
     }
@@ -92,8 +97,12 @@ export function decodeContractError(error, abi) {
 
     // Return selector and error name, ignoring decodedData completely
     return { selector: errorSelector, errorName: matchedError };
-  } catch (err) {
-    console.error("Error decoding failed:", err.message);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Error decoding failed:", err.message);
+    } else {
+      console.error("Unknown error during decoding", err);
+    }
     return null;
   }
 }
