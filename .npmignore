@@ -1,0 +1,6 @@
+src/cli.ts
+.env
+tsconfig.json
+.vscode/
+test/
+*.test.ts
