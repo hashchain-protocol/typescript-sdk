@@ -19,7 +19,7 @@ export class HashchainProtocol {
     if (signer || (provider as ethers.providers.JsonRpcProvider).getSigner) {
       this.signer =
         signer || (provider as ethers.providers.JsonRpcProvider).getSigner();
-      this.contract = this.contract.connect(signer);
+      this.contract = this.contract.connect(this.signer);
     }
   }
 
@@ -112,7 +112,7 @@ export class HashchainProtocol {
     );
   }
 
-  async getChannel(payer: string, merchant: string) {
-    return await this.contract.channelsMapping(payer, merchant);
+  async getChannel(payer: string, merchant: string, token: string) {
+    return await this.contract.channelsMapping(payer, merchant, token);
   }
 }
