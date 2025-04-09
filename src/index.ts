@@ -1,4 +1,25 @@
 import { HashchainProtocol } from "./protocol";
-import { hashchain } from "./utils";
+import {
+  CreateChannelParams,
+  RedeemChannelParams,
+  ReclaimChannelParams,
+} from "./types/channel";
+import {
+  hashchain,
+  generateSeed,
+  toWei,
+  fromWei,
+  decodeContractError,
+} from "./utils";
 
-export { hashchain, HashchainProtocol };
+export {
+  HashchainProtocol,
+  hashchain,
+  generateSeed,
+  toWei,
+  fromWei,
+  decodeContractError,
+  CreateChannelParams,
+  RedeemChannelParams,
+  ReclaimChannelParams,
+};
