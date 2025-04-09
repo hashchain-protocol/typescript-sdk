@@ -1,8 +1,8 @@
 {
   "name": "hashchain-sdk",
   "version": "1.0.0",
-  "description": "A Hashchain-based payment channel SDK",
-  "main": "index.js",
+  "description": "Hashchain Protocol SDK",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
     "cli": "ts-node src/cli.ts"
   },
   "author": "Aashish Paliwal",
-  "license": "MIT",
+  "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.13.9",
     "dotenv": "^16.4.7",
