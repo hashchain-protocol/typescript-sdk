@@ -88,7 +88,7 @@ const createChannel = async () => {
     const trustAnchor = hashchainArray[hashchainArray.length - 1];
     let tx;
     if (token === ethers.constants.AddressZero) {
-      tx = await hashchainSDK.createChannel(
+      tx = await hashchainSDK.createChannel({
         merchant,
         token,
         trustAnchor,
@@ -96,18 +96,18 @@ const createChannel = async () => {
         numberOfTokens,
         merchantWithdrawAfterBlocks,
         payerWithdrawAfterBlocks,
-        { value: amount }
-      );
+        overrides: { value: amount },
+      });
     } else {
-      tx = await hashchainSDK.createChannel(
+      tx = await hashchainSDK.createChannel({
         merchant,
         token,
         trustAnchor,
         amount,
         numberOfTokens,
         merchantWithdrawAfterBlocks,
-        payerWithdrawAfterBlocks
-      );
+        payerWithdrawAfterBlocks,
+      });
     }
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
@@ -134,13 +134,14 @@ const redeemChannel = async () => {
     const numberOfTokensInput = await askQuestion(
       "Enter number of used tokens: "
     );
+    const numberOfTokensUsed = parseInt(numberOfTokensInput, 10);
 
-    const tx = await hashchainSDK.redeemChannel(
+    const tx = await hashchainSDK.redeemChannel({
       payer,
       token,
       finalHashValue,
-      numberOfTokensInput
-    );
+      numberOfTokensUsed,
+    });
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
     const receipt = await tx.wait();
@@ -160,7 +161,7 @@ const reclaimChannel = async () => {
     validateAddress("Merchant", merchant);
     const token = await askQuestion("Enter token address: ");
     validateTokenAddress("Token", token);
-    const tx = await hashchainSDK.reclaimChannel(merchant, token);
+    const tx = await hashchainSDK.reclaimChannel({ merchant, token });
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
     const receipt = await tx.wait();
