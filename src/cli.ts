@@ -134,12 +134,13 @@ const redeemChannel = async () => {
     const numberOfTokensInput = await askQuestion(
       "Enter number of used tokens: "
     );
+    const numberOfTokensUsed = parseInt(numberOfTokensInput, 10);
 
     const tx = await hashchainSDK.redeemChannel(
       payer,
       token,
       finalHashValue,
-      numberOfTokensInput
+      numberOfTokensUsed
     );
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
