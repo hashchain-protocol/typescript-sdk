@@ -178,6 +178,7 @@ const main = async () => {
   console.log("1: Create Channel");
   console.log("2: Redeem Channel");
   console.log("3: Reclaim Channel");
+  console.log("0: Exit");
 
   rl.question("Enter your choice: ", async (choice) => {
     switch (choice) {
@@ -190,6 +191,9 @@ const main = async () => {
       case "3":
         await reclaimChannel();
         break;
+      case "0":
+        console.log("👋 Exiting...");
+        return;
       default:
         console.log("Invalid choice. Please enter 1, 2, or 3.");
     }
