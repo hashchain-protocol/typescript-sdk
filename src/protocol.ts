@@ -44,7 +44,7 @@ export class HashchainProtocol {
    *
    * @param params - Parameters required to create a new channel
    * @param params.merchant - The merchant receiving payments.
-   * @param params.token - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
+   * @param params.tokenAddress - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
    * @param params.trustAnchor - The final hash value of the hashchain.
    * @param params.amount - The total deposit amount for the channel.
    * @param params.numberOfTokens - The number of tokens in the hashchain.
@@ -57,7 +57,7 @@ export class HashchainProtocol {
   ): Promise<ethers.providers.TransactionResponse> {
     const {
       merchant,
-      token,
+      tokenAddress,
       trustAnchor,
       amount,
       numberOfTokens,
@@ -69,13 +69,13 @@ export class HashchainProtocol {
     if (!this.signer) throw new Error("Signer required to send transactions");
 
     // Handle native vs token logic here
-    const isNative = token === ethers.constants.AddressZero;
+    const isNative = tokenAddress === ethers.constants.AddressZero;
     const txOverrides = isNative ? { ...overrides, value: amount } : overrides;
 
     try {
       return await this.contract.createChannel(
         merchant,
-        token,
+        tokenAddress,
         trustAnchor,
         amount,
         numberOfTokens,
@@ -103,7 +103,7 @@ export class HashchainProtocol {
    *
    * @param params - Parameters required to redeem the channel
    * @param params.payer - The address of the payer.
-   * @param params.token - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
+   * @param params.tokenAddress - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
    * @param params.finalHashValue - The final hash value after consuming tokens.
    * @param params.numberOfTokensUsed - The number of tokens used during the transaction.
    */
@@ -111,10 +111,11 @@ export class HashchainProtocol {
     params: RedeemChannelParams
   ): Promise<ethers.providers.TransactionResponse> {
     try {
-      const { payer, token, finalHashValue, numberOfTokensUsed } = params;
+      const { payer, tokenAddress, finalHashValue, numberOfTokensUsed } =
+        params;
       return await this.contract.redeemChannel(
         payer,
-        token,
+        tokenAddress,
         finalHashValue,
         numberOfTokensUsed
       );
@@ -137,14 +138,14 @@ export class HashchainProtocol {
    *
    * @param params - Parameters required to reclaim the channel funds
    * @param params.merchant - The address of the merchant.
-   * @param params.token - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
+   * @param params.tokenAddress - The ERC-20 token address used for payments, or `ethers.constants.AddressZero` to use the native currency (ETH).
    */
   async reclaimChannel(
     params: ReclaimChannelParams
   ): Promise<ethers.providers.TransactionResponse> {
     try {
-      const { merchant, token } = params;
-      return await this.contract.reclaimChannel(merchant, token);
+      const { merchant, tokenAddress } = params;
+      return await this.contract.reclaimChannel(merchant, tokenAddress);
     } catch (error: any) {
       const decodedError = decodeContractError(error, HashchainProtocolABI);
       throw new Error(

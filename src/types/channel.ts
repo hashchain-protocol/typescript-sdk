@@ -2,7 +2,7 @@ import { BigNumberish, PayableOverrides } from "ethers";
 
 export interface CreateChannelParams {
   merchant: string;
-  token: string;
+  tokenAddress: string;
   trustAnchor: string;
   amount: BigNumberish;
   numberOfTokens: number;
@@ -13,12 +13,12 @@ export interface CreateChannelParams {
 
 export interface RedeemChannelParams {
   payer: string;
-  token: string;
+  tokenAddress: string;
   finalHashValue: string;
   numberOfTokensUsed: number;
 }
 
 export interface ReclaimChannelParams {
   merchant: string;
-  token: string;
+  tokenAddress: string;
 }

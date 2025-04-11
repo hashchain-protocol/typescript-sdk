@@ -61,8 +61,8 @@ const createChannel = async () => {
     // const payer = await askQuestion("Enter payer address: ");
     const merchant = await askQuestion("Enter merchant address: ");
     validateAddress("Merchant", merchant);
-    const token = await askQuestion("Enter token address: ");
-    validateTokenAddress("Token", token);
+    const tokenAddress = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", tokenAddress);
     const amountInput = await askQuestion("Enter amount in ETH: ");
     const numberOfTokensInput = await askQuestion("Enter number of tokens: ");
     const merchantWithdrawAfterBlocksInput = await askQuestion(
@@ -87,10 +87,10 @@ const createChannel = async () => {
     const hashchainArray = hashchain("initial-seed", numberOfTokens);
     const trustAnchor = hashchainArray[hashchainArray.length - 1];
     let tx;
-    if (token === ethers.constants.AddressZero) {
+    if (tokenAddress === ethers.constants.AddressZero) {
       tx = await hashchainSDK.createChannel({
         merchant,
-        token,
+        tokenAddress,
         trustAnchor,
         amount,
         numberOfTokens,
@@ -101,7 +101,7 @@ const createChannel = async () => {
     } else {
       tx = await hashchainSDK.createChannel({
         merchant,
-        token,
+        tokenAddress,
         trustAnchor,
         amount,
         numberOfTokens,
@@ -126,8 +126,8 @@ const redeemChannel = async () => {
 
     const payer = await askQuestion("Enter payer address: ");
     validateAddress("Payer", payer);
-    const token = await askQuestion("Enter token address: ");
-    validateTokenAddress("Token", token);
+    const tokenAddress = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", tokenAddress);
     const finalHashValue = await askQuestion(
       "Enter final hash value received: "
     );
@@ -138,7 +138,7 @@ const redeemChannel = async () => {
 
     const tx = await hashchainSDK.redeemChannel({
       payer,
-      token,
+      tokenAddress,
       finalHashValue,
       numberOfTokensUsed,
     });
@@ -159,9 +159,9 @@ const reclaimChannel = async () => {
 
     const merchant = await askQuestion("Enter merchant address: ");
     validateAddress("Merchant", merchant);
-    const token = await askQuestion("Enter token address: ");
-    validateTokenAddress("Token", token);
-    const tx = await hashchainSDK.reclaimChannel({ merchant, token });
+    const tokenAddress = await askQuestion("Enter token address: ");
+    validateTokenAddress("Token", tokenAddress);
+    const tx = await hashchainSDK.reclaimChannel({ merchant, tokenAddress });
 
     console.log("\n📤 Transaction sent! Hash:", tx.hash);
     const receipt = await tx.wait();
