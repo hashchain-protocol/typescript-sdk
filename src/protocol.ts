@@ -159,14 +159,23 @@ export class HashchainProtocol {
   //   return this.sendTransaction(() => this.contract.reclaimChannel(...params));
   // }
 
+  /**
+   * Verifies the integrity of a hashchain on-chain.
+   *
+   * @param trustAnchor - The initial hashchain value stored on-chain.
+   * @param finalHashValue - The final hash value after off-chain usage.
+   * @param numberOfTokensUsed - How many hash iterations were used.
+   * @returns boolean indicating if the final hash resolves to the trust anchor.
+   */
   async verifyHashchain(
     trustAnchor: string,
     finalHashValue: string,
     numberOfTokensUsed: number
   ): Promise<boolean> {
-    return (
-      await this.contract,
-      this.verifyHashchain(trustAnchor, finalHashValue, numberOfTokensUsed)
+    return await this.contract.verifyHashchain(
+      trustAnchor,
+      finalHashValue,
+      numberOfTokensUsed
     );
   }
 
