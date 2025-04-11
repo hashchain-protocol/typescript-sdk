@@ -179,6 +179,14 @@ export class HashchainProtocol {
     );
   }
 
+  /**
+   * Retrieves payment channel details from the contract.
+   *
+   * @param payer - The address of the payer who created the channel.
+   * @param merchant - The address of the merchant receiving payments.
+   * @param token - The ERC-20 token address used, or AddressZero for native ETH.
+   * @returns Channel data stored on-chain.
+   */
   async getChannel(payer: string, merchant: string, token: string) {
     return await this.contract.channelsMapping(payer, merchant, token);
   }
