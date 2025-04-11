@@ -11,6 +11,7 @@ import {
   fromWei,
   decodeContractError,
 } from "./utils";
+import HashchainProtocolABI from "../abis/HashchainProtocol.abi.json";
 
 export {
   HashchainProtocol,
@@ -22,4 +23,5 @@ export {
   CreateChannelParams,
   RedeemChannelParams,
   ReclaimChannelParams,
+  HashchainProtocolABI,
 };

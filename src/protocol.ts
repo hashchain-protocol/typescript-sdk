@@ -28,17 +28,6 @@ export class HashchainProtocol {
     }
   }
 
-  // private async sendTransaction<T>(method: () => Promise<T>): Promise<T> {
-  //   try {
-  //     return await method();
-  //   } catch (error: any) {
-  //     const decodedError = decodeContractError(error, HashchainProtocolABI);
-  //     throw new Error(
-  //       `Contract Error: ${decodedError?.errorName || "Unknown"} `
-  //     );
-  //   }
-  // }
-
   /**
    * Creates a new payment channel between a payer and a merchant.
    *
@@ -91,13 +80,6 @@ export class HashchainProtocol {
     }
   }
 
-  // async createChannel(
-  //   ...params
-  // ): Promise<ethers.providers.TransactionResponse> {
-  //   if (!this.signer) throw new Error("Signer required to send transactions");
-  //   return this.sendTransaction(() => this.contract.createChannel(...params));
-  // }
-
   /**
    * Redeems a payment channel by verifying the final hash value.
    *
@@ -127,12 +109,6 @@ export class HashchainProtocol {
     }
   }
 
-  // async redeemChannel(
-  //   ...params
-  // ): Promise<ethers.providers.TransactionResponse> {
-  //   return this.sendTransaction(() => this.contract.redeemChannel(...params));
-  // }
-
   /**
    * Allows the payer to reclaim their deposit after the withdrawal period expires.
    *
@@ -153,12 +129,6 @@ export class HashchainProtocol {
       );
     }
   }
-
-  // async reclaimChannel(
-  //   ...params
-  // ): Promise<ethers.providers.TransactionResponse> {
-  //   return this.sendTransaction(() => this.contract.reclaimChannel(...params));
-  // }
 
   /**
    * Verifies the integrity of a hashchain on-chain.

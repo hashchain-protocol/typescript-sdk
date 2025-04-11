@@ -199,9 +199,6 @@ const main = async () => {
     }
     rl.close();
   });
-  //   await createChannel();
-  //   await redeemChannel();
-  // await reclaimChannel();
 };
 
 main();

@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { Interface, Fragment } from "ethers/lib/utils";
+import { Interface } from "ethers/lib/utils";
 import { JsonFragment } from "@ethersproject/abi";
 
 /**
@@ -80,10 +80,6 @@ export function decodeContractError(error: unknown, abi: JsonFragment[]) {
     }
 
     console.log("Matched Error:", matchedError);
-
-    // Decode the error
-    // const decodedError = iface.decodeErrorResult(matchedError, errorData);
-    // console.log("Decoded Error Data:", decodedError);
 
     // Attempt to decode the error
     let decodedError: any = [];
