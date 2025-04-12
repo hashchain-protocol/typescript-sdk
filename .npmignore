@@ -1,6 +1,12 @@
-src/cli.ts
+# Dev files
 .env
 tsconfig.json
 .vscode/
 test/
 *.test.ts
+
+# CLI entry
+src/cli.ts
+
+# Source files 
+src/

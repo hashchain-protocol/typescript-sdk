@@ -1,19 +1,20 @@
 {
-  "name": "hashchain-sdk",
+  "name": "@hashchain/sdk",
   "version": "1.0.0",
-  "description": "Hashchain Protocol SDK",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "Hashchain Protocol SDK for trustless on-chain payment channels",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist", "README.md", "LICENSE"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc && cp -r abis dist/",
     "cli": "ts-node src/cli.ts"
   },
   "bin": {
   "hashchain-cli": "./dist/cli.js"
   },
   "author": "Aashish Paliwal",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.13.9",
     "dotenv": "^16.4.7",
