@@ -124,3 +124,24 @@ export async function approveToken(
   const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
   return await token.approve(spender, amount);
 }
+
+/**
+ * Retrieves the current ERC-20 token allowance that the spender has for the signer's address.
+ *
+ * @param {ethers.Signer} signer - The signer whose allowance is being checked.
+ * @param {string} tokenAddress - The ERC-20 token contract address.
+ * @param {string} spender - The address of the contract or entity allowed to spend tokens.
+ * @returns {Promise<ethers.BigNumber>} - The current allowance amount as a BigNumber.
+ */
+export async function getTokenAllowance(
+  signer: ethers.Signer,
+  tokenAddress: string,
+  spender: string
+): Promise<ethers.BigNumber> {
+  const erc20Abi = [
+    "function allowance(address owner, address spender) view returns (uint256)",
+  ];
+  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  const owner = await signer.getAddress();
+  return await token.allowance(owner, spender);
+}
