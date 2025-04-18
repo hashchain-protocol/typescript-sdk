@@ -150,6 +150,21 @@ export class HashchainProtocol {
   }
 
   /**
+   * Retrieves the current ERC-20 token allowance that the HashchainProtocol contract
+   * has to spend on behalf of the connected signer.
+   *
+   * @param {string} tokenAddress - The ERC-20 token contract address.
+   * @returns {Promise<ethers.BigNumber>} - The allowance amount as a BigNumber.
+   */
+  async checkAllowance(tokenAddress: string): Promise<BigNumber> {
+    return await getTokenAllowance(
+      this.signer,
+      tokenAddress,
+      this.contract.address
+    );
+  }
+
+  /**
    * Verifies the integrity of a hashchain on-chain.
    *
    * @param trustAnchor - The initial hashchain value stored on-chain.
