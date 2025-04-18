@@ -102,3 +102,25 @@ export function decodeContractError(error: unknown, abi: JsonFragment[]) {
     return null;
   }
 }
+
+/**
+ * Approves a spender address to transfer a specified amount of ERC-20 tokens on behalf of the signer.
+ *
+ * @param {ethers.Signer} signer - The signer who owns the tokens and will send the approval transaction.
+ * @param {string} tokenAddress - The ERC-20 token contract address.
+ * @param {string} spender - The address allowed to spend the tokens (typically the smart contract address).
+ * @param {ethers.BigNumber} amount - The amount of tokens to approve.
+ * @returns {Promise<ethers.providers.TransactionResponse>} - The transaction response after sending the approval.
+ */
+export async function approveToken(
+  signer: ethers.Signer,
+  tokenAddress: string,
+  spender: string,
+  amount: ethers.BigNumber
+) {
+  const erc20Abi = [
+    "function approve(address spender, uint256 value) returns (bool)",
+  ];
+  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  return await token.approve(spender, amount);
+}
