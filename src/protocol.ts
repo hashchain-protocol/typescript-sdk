@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
-import { hashchain, decodeContractError } from "./utils";
+import { ethers, BigNumber } from "ethers";
+import { decodeContractError, approveToken, getTokenAllowance } from "./utils";
 import HashchainProtocolABI from "../abis/HashchainProtocol.abi.json";
 import {
   CreateChannelParams,
@@ -59,6 +59,8 @@ export class HashchainProtocol {
 
     // Handle native vs token logic here
     const isNative = tokenAddress === ethers.constants.AddressZero;
+    // if (!isNative) {
+    // }
     const txOverrides = isNative ? { ...overrides, value: amount } : overrides;
 
     try {
@@ -128,6 +130,23 @@ export class HashchainProtocol {
         `Contract Error: ${decodedError?.errorName || "Unknown"} `
       );
     }
+  }
+
+  /**
+   * Approves the HashchainProtocol contract to spend a specified amount of ERC-20 tokens
+   * on behalf of the connected signer.
+   *
+   * @param {string} tokenAddress - The ERC-20 token contract address.
+   * @param {ethers.BigNumber} amount - The amount of tokens to approve.
+   * @returns {Promise<ethers.providers.TransactionResponse>} - The transaction response after sending the approval.
+   */
+  async approve(tokenAddress: string, amount: BigNumber) {
+    return await approveToken(
+      this.signer,
+      tokenAddress,
+      this.contract.address,
+      amount
+    );
   }
 
   /**
