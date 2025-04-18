@@ -102,3 +102,46 @@ export function decodeContractError(error: unknown, abi: JsonFragment[]) {
     return null;
   }
 }
+
+/**
+ * Approves a spender address to transfer a specified amount of ERC-20 tokens on behalf of the signer.
+ *
+ * @param {ethers.Signer} signer - The signer who owns the tokens and will send the approval transaction.
+ * @param {string} tokenAddress - The ERC-20 token contract address.
+ * @param {string} spender - The address allowed to spend the tokens (typically the smart contract address).
+ * @param {ethers.BigNumber} amount - The amount of tokens to approve.
+ * @returns {Promise<ethers.providers.TransactionResponse>} - The transaction response after sending the approval.
+ */
+export async function approveToken(
+  signer: ethers.Signer,
+  tokenAddress: string,
+  spender: string,
+  amount: ethers.BigNumber
+) {
+  const erc20Abi = [
+    "function approve(address spender, uint256 value) returns (bool)",
+  ];
+  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  return await token.approve(spender, amount);
+}
+
+/**
+ * Retrieves the current ERC-20 token allowance that the spender has for the signer's address.
+ *
+ * @param {ethers.Signer} signer - The signer whose allowance is being checked.
+ * @param {string} tokenAddress - The ERC-20 token contract address.
+ * @param {string} spender - The address of the contract or entity allowed to spend tokens.
+ * @returns {Promise<ethers.BigNumber>} - The current allowance amount as a BigNumber.
+ */
+export async function getTokenAllowance(
+  signer: ethers.Signer,
+  tokenAddress: string,
+  spender: string
+): Promise<ethers.BigNumber> {
+  const erc20Abi = [
+    "function allowance(address owner, address spender) view returns (uint256)",
+  ];
+  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  const owner = await signer.getAddress();
+  return await token.allowance(owner, spender);
+}
