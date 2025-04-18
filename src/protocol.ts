@@ -59,8 +59,18 @@ export class HashchainProtocol {
 
     // Handle native vs token logic here
     const isNative = tokenAddress === ethers.constants.AddressZero;
-    // if (!isNative) {
-    // }
+
+    // Check allowance if token is not native token
+    if (!isNative) {
+      const allowance = await this.checkAllowance(tokenAddress);
+
+      // If allowance is less than the amount, throw an error
+      if (allowance.lt(amount)) {
+        throw new Error(
+          "InsufficientAllowanceError: Please approve tokens first."
+        );
+      }
+    }
     const txOverrides = isNative ? { ...overrides, value: amount } : overrides;
 
     try {
