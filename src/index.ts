@@ -1,15 +1,18 @@
-import { HashchainProtocol } from "./protocol";
+import { HashchainProtocol } from "./hashchainProtocol";
 import {
   CreateChannelParams,
   RedeemChannelParams,
   ReclaimChannelParams,
-} from "./types/channel";
+} from "./types/hashchainChannel";
 import {
   hashchain,
   generateSeed,
   toWei,
   fromWei,
   decodeContractError,
+  getTokenAllowance,
+  approveToken,
+  verifyHashchainToken
 } from "./utils";
 import HashchainProtocolABI from "../abis/HashchainProtocol.abi.json";
 
@@ -20,6 +23,9 @@ export {
   toWei,
   fromWei,
   decodeContractError,
+  getTokenAllowance,
+  approveToken,
+  verifyHashchainToken,
   CreateChannelParams,
   RedeemChannelParams,
   ReclaimChannelParams,

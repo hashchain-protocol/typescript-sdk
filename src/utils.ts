@@ -41,6 +41,26 @@ export const hashchain = (value?: string, times: number = 1): string[] => {
 };
 
 /**
+ * Verify hashchain using trust anchor, current hash and number of hashes
+ * @param {string} trustAnchor - The trust anchor to verify against.
+ * @param {string} currentHash - The current hash to verify.
+ * @param {number} numOfHashes - The number of hashes in the chain.
+ * @returns {boolean} - Returns true if the hashchain is valid, false otherwise.
+ */
+export const verifyHashchainToken = (
+  trustAnchor: string,
+  currentHash: string,
+  numOfHashes: number
+): boolean => {
+  let hash = currentHash;
+
+  for (let i = 0; i < numOfHashes; i++) {
+    hash = ethers.utils.keccak256(ethers.utils.arrayify(hash));
+  }
+  return hash === trustAnchor;
+}
+
+/**
  * Decodes a smart contract error using the provided ABI.
  * @param {string} errorData - The encoded error data from the transaction.
  * @param {object} abi - The ABI of the contract.
@@ -144,4 +164,37 @@ export async function getTokenAllowance(
   const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
   const owner = await signer.getAddress();
   return await token.allowance(owner, spender);
+}
+
+/**
+ * Create an EIP-191 signature (for SignatureProtocol.redeemChannel)
+ * @param wallet       - ethers.Wallet instance (payer)
+ * @param contract     - contract address (string)
+ * @param payer        - payer address (string)
+ * @param payee        - payee address (string)
+ * @param token        - token address (string)
+ * @param amount       - deposit amount (BigNumberish)
+ * @param nonce        - nonce (BigNumberish)
+ * @param sessionId    - sessionId (BigNumberish)
+ * @returns Promise<string>  // the signature (0x...)
+ */
+export async function signChannelVoucher(
+  wallet: ethers.Wallet,
+  contract: string,
+  payer: string,
+  payee: string,
+  token: string,
+  amount: ethers.BigNumberish,
+  nonce: ethers.BigNumberish,
+  sessionId: ethers.BigNumberish
+): Promise<string> {
+  // Replicate abi.encodePacked(contract, payer, payee, token, amount, nonce, sessionId)
+  const packed = ethers.utils.solidityPack(
+    ["address", "address", "address", "address", "uint256", "uint256", "uint64"],
+    [contract, payer, payee, token, amount, nonce, sessionId]
+  );
+  const hash = ethers.utils.keccak256(packed);
+
+  // Sign the EIP-191 message hash (personal_sign, same as .signMessage)
+  return await wallet.signMessage(ethers.utils.arrayify(hash));
 }
